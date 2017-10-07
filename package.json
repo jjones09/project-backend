@@ -1,0 +1,22 @@
+{
+  "name": "project-backend",
+  "version": "1.0.0",
+  "description": "Backend for Final Year project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjones09/project-backend.git"
+  },
+  "author": "Jordan Jones",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjones09/project-backend/issues"
+  },
+  "homepage": "https://github.com/jjones09/project-backend",
+  "dependencies": {
+    "express": "^4.16.1"
+  }
+}
