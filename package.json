@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/jjones09/project-backend",
   "dependencies": {
-    "express": "^4.16.1"
+    "change-case": "^3.0.1",
+    "express": "^4.16.1",
+    "require-dir": "^0.3.2"
   }
 }

@@ -1,8 +1,14 @@
 "use strict";
 
-module.exports = app => {
+module.exports = router => {
 
-    app.get('/users', (req, res) => {
-        res.send('Hit the users route');
-    });
+    router.route('/')
+        .get((req, res) => {
+            res.send('Hit the users route');
+        });
+
+    router.route('/:uId')
+        .get((req, res) => {
+            res.send('Hello user ' + req.params.uId);
+        });
 };

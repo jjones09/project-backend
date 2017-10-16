@@ -1,10 +1,20 @@
 "use strict";
 
-module.exports = app => {
+let async = require('async');
+let changeCase = require('change-case');
+let express = require('express');
+let routeFiles = require('require-dir')();
 
-    require('./users')(app);
+let app;
 
-    app.get('/', (req, res) => {
-       res.send('Hello World!');
-    });
+let mapRoute = fileName => {
+    let router = express.Router();
+    require('./' + fileName)(router);
+    app.use('/' + changeCase.paramCase(fileName), router);
+};
+
+module.exports = appIn => {
+    app = appIn;
+
+    async.map(Object.keys(routeFiles), mapRoute);
 };
