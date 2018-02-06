@@ -13,4 +13,4 @@ deployment:
           s3_location:
             bucket: playsparkbucket
             key_pattern: project-backend-{BRANCH}-{SHORT_COMMIT}
-        deployment_group: playspark-deployment-group
+        deployment_group: playspark-dg
