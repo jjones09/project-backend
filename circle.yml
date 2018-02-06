@@ -5,4 +5,5 @@ deployment:
   prod:
     branch: master
     commands:
-      - aws s3 sync /home/ubuntu/project-backend s3://playsparkbucket --delete
+      - zip -r bundle.zip /home/ubuntu/project-backend
+      - aws s3 bundle.zip s3://playsparkbucket --delete
