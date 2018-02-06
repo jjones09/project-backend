@@ -1,0 +1,41 @@
+{
+  "name": "project-backend",
+  "version": "1.0.0",
+  "description": "Backend for Final Year project",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha tests",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jjones09/project-backend.git"
+  },
+  "author": "Jordan Jones",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjones09/project-backend/issues"
+  },
+  "homepage": "https://github.com/jjones09/project-backend",
+  "dependencies": {
+    "change-case": "^3.0.1",
+    "cookie-session": "^2.0.0-beta.3",
+    "express": "^4.16.2",
+    "jshint": "^2.9.5",
+    "mongodb": "^2.2.33",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "require-dir": "^0.3.2"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.1.2",
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "mocha": "^5.0.0",
+    "nodemon": "^1.14.11"
+  }
+}
