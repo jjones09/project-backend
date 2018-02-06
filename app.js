@@ -11,7 +11,4 @@ require('./routes/index')(app);
 
 app.listen(port, () => {
    console.log('Server listening on port %s', port);
-
-   // db.get('users', {});
-   // db.insert('users', {'name': 'Raw Sauce', 'age': 42});
 });
