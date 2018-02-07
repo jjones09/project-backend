@@ -23,3 +23,23 @@ jobs:
         - run:
           name: Run unit tests
           command: npm test
+  deploy:
+    working_directory: ~/tmp
+    docker:
+      - image: circleci/node:7
+    steps:
+      - run:
+        name: Just log something
+        command: echo "Nothing to see here folks"
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+        requires:
+          -build
+        filters:
+          branches:
+            only:
+              - master
