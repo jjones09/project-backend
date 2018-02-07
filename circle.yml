@@ -5,4 +5,4 @@ deployment:
   prod:
     branch: master
     commands:
-      - zip ../bundle.zip /home/ubuntu/project-backend -r *.[^.]*
+      - zip -r ../bundle.zip /home/ubuntu/project-backend -x /home/ubuntu/project-backend/node_modules/**\*
