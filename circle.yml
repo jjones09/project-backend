@@ -7,6 +7,6 @@ deployment:
     commands:
       - zip -r bundle.zip /home/ubuntu/project-backend -x /home/ubuntu/project-backend/node_modules/**\*
       - ls
-      - remove -rf node_modules
+      - rm -rf node_modules
       - ls
       - aws s3 sync /home/ubuntu/project-backend s3://playsparkbucket --delete
