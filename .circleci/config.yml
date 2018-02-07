@@ -23,30 +23,30 @@ jobs:
       - run:
           name: Run unit tests
           command: npm test
-  deploy:
-    working_directory: ~/tmp
-    docker:
-      - image: circleci/node:7
-    steps:
-      - run:
-          name: Install Python and AWS CLI
-          command: |
-            apt install python-pip python-dev
-            pip install awscli
-      - run:
-          name: Deploy
-          command: |
-            sudo curl -L -o /usr/bin/doocker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
-            sudo chmod 0755 /usr/bin/docker
-            ./deploy.sh
-workflows:
-  version: 2
-  build_test_deploy:
-    jobs:
-      - build
-      - deploy:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+#  deploy:
+#    working_directory: ~/tmp
+#    docker:
+#      - image: circleci/node:7
+#    steps:
+#      - run:
+#          name: Install Python and AWS CLI
+#          command: |
+#            apt install python-pip python-dev
+#            pip install awscli
+#      - run:
+#          name: Deploy
+#          command: |
+#            sudo curl -L -o /usr/bin/doocker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
+#            sudo chmod 0755 /usr/bin/docker
+#            ./deploy.sh
+#workflows:
+#  version: 2
+#  build_test_deploy:
+#    jobs:
+#      - build
+#      - deploy:
+#        requires:
+#          - build
+#        filters:
+#          branches:
+#            only: master
