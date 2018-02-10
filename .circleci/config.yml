@@ -29,6 +29,7 @@ jobs:
       - image: circleci/node:7
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build Docker image
           command: docker build -t project-backend:$CIRCLE_SHA1 .
