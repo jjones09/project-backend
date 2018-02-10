@@ -56,8 +56,8 @@ jobs:
             cd app/
             git push heroku master
 workflows:
-  version:2
-  deploy_master:
+  version: 2
+  release_to_heroku:
     jobs:
       - build
       - deploy:
