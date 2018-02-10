@@ -52,7 +52,7 @@ jobs:
             - node_modules
       - run:
           name: Create dbConnection.json
-          command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --host=$MONGO_HOSTS --opts=$MONGO_OPTIONS
+          command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
           name: Build Docker image
           command: docker build -t jjones09/project-backend:$CIRCLE_SHA1 .
