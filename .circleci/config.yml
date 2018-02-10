@@ -54,6 +54,13 @@ jobs:
           name: Create dbConnection.json
           command: sudo grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
+          name: ls
+          command: |
+            ls
+            cd config
+            ls
+            cd ..
+      - run:
           name: Build Docker image
           command: docker build -t jjones09/project-backend:$CIRCLE_SHA1 .
       - run:
