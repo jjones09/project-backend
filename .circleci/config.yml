@@ -37,7 +37,7 @@ jobs:
           name: Push image to DockerHub
           command: |
             docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
-            docker push project-backend:$CIRCLE_SHA
+            docker push project-backend:$CIRCLE_SHA1
       - run:
           name: Setup Heroku
           command: |
