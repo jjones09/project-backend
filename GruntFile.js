@@ -1,4 +1,4 @@
-const fs = require('fs-extra');
+const fs = require('fs');
 
 module.exports = (grunt) => {
 
@@ -23,7 +23,7 @@ module.exports = (grunt) => {
             hosts: grunt.option('hosts').split(','),
             opts: grunt.option('opts').split(',')
         };
-        fs.outputFileSync('./config/dbConnection.json', JSON.stringify(dbConf),
-            {encoding: 'utf8', flag: 'wx'});
+        fs.writeFileSync('./config/dbConnection.json', JSON.stringify(dbConf),
+            {encoding: 'utf8', flag: 'w'});
     });
 };
