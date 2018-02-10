@@ -22,6 +22,7 @@
     "change-case": "^3.0.1",
     "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
     "jshint": "^2.9.5",
     "mongodb": "^2.2.33",
     "passport": "^0.4.0",
