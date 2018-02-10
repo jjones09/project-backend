@@ -9,6 +9,7 @@ const port = process.env.PORT || 3000;
 
 require('./routes/index')(app);
 
+// Start app
 app.listen(port, () => {
    console.log('Server listening on port %s', port);
 });
