@@ -28,14 +28,7 @@ jobs:
     docker:
       - image: circleci/node:7
     steps:
-      - checkout
-      - run:
-          name: Install Docker client
-          command: |
-            curl -sSL https://get.docker.com/ | sh
-            sudo service docker stop
-            sudo nohup docker daemon -H tcp://0.0.0.0:2375 -H unix://var/run/docker.sock &
-
+      - checkouts
       - run:
           name: Build Docker image
           command: docker build -t project-backend:$CIRCLE_SHA1 .
