@@ -21,6 +21,9 @@ jobs:
           paths:
             - node_modules
       - run:
+          name: Run linter
+          command: grunt lint
+      - run:
           name: Run unit tests
           command: npm test
   deploy:
@@ -30,6 +33,20 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+                - v1-dependencies-
+      - run:
+          name: Install npm dependencies
+          command: npm install
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Create dbConnection.json
+          command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --host=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
           name: Build Docker image
           command: docker build -t jjones09/project-backend:$CIRCLE_SHA1 .
