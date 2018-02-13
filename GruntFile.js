@@ -20,10 +20,10 @@ module.exports = (grunt) => {
         let dbConf = {
             user: grunt.option('user'),
             pass: grunt.option('pass'),
-            hosts: grunt.option('host'),
-            opts: grunt.option('opts')
+            hosts: grunt.option('hosts').split(','),
+            opts: grunt.option('opts').split(',')
         };
         fs.writeFileSync('./config/dbConnection.json', JSON.stringify(dbConf),
-            {encoding: 'utf8', flag: 'wx'});
+            {encoding: 'utf8', flag: 'w'});
     });
 };

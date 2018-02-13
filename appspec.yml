@@ -1,9 +1,0 @@
-version: 0.0
-os: linux
-files:
-  - source:
-    destination: /playspark
-hooks:
-  ApplicationStart:
-    - location: app.js
-      timeout: 3600

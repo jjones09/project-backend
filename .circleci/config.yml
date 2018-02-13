@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/tmp
+    docker:
+      - image: circleci/node:7
+    steps:
+      - checkout
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          - v1-dependencies-
+      - run:
+          name: Install npm dependencies
+          command: npm install
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Globally install grunt-cli
+          command: sudo npm install -g grunt-cli
+      - run:
+          name: Run linter
+          command: grunt lint
+      - run:
+          name: Run unit tests
+          command: npm test
+  deploy:
+    version: 2
+    docker:
+      - image: circleci/node:7
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+                - v1-dependencies-
+      - run:
+          name: Install npm dependencies
+          command: npm install
+      - run:
+          name: Globally install grunt-cli
+          command: sudo npm install -g grunt-cli
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Create dbConnection.json
+          command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
+      - run:
+          name: Build Docker image
+          command: docker build -t jjones09/project-backend:$CIRCLE_SHA1 .
+      - run:
+          name: Push image to DockerHub
+          command: |
+            docker login -u $DOCKERHUB_LOGIN -p $DOCKERHUB_PASSWORD
+            docker push jjones09/project-backend:$CIRCLE_SHA1
+      - run:
+          name: Setup Heroku
+          command: |
+            chmod +x .circleci/setup-heroku.sh
+            .circleci/setup-heroku.sh
+      - run:
+          name: Deploy to Heroku
+          command: git push heroku master
+workflows:
+  version: 2
+  release_to_heroku:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
