@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jjones09/project-backend",
   "dependencies": {
     "async": "^2.6.0",
+    "body-parser": "^1.18.2",
     "change-case": "^3.0.1",
     "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.2",
@@ -27,6 +28,7 @@
     "mongodb": "^2.2.33",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
+    "redis": "^2.8.0",
     "require-dir": "^0.3.2"
   },
   "devDependencies": {
