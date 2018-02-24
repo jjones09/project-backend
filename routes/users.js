@@ -2,7 +2,7 @@
 
 const https = require('https');
 
-const accessToken = require('../lib/access-token/accessToken');
+const tokenMgr = require('../lib/token-manager/tokenManager');
 
 module.exports = router => {
 
@@ -11,22 +11,23 @@ module.exports = router => {
             res.send('Hit the users route');
         });
 
-    router.route('/getToken')
+    router.route('/:uID/get-token')
         .post((req, res) => {
+            let uID = req.params.uID;
 
-            let params = accessToken.getParams(req.body);
+            let accessTkn = tokenMgr.getAccessToken(req.body);
 
             let opts = {
                 hostname: 'graph.facebook.com',
-                path: '/v2.11/me?fields=id,name&access_token=' + params.accessToken
+                path: '/v2.11/me?fields=id,name&access_token=' + accessTkn
             };
 
-            https.get(opts, res => {
-                if (res.statusCode === 200) {
-                    res.on('data', function (data) {
+            https.get(opts, fbRes => {
+                if (fbRes.statusCode === 200) {
+                    fbRes.on('data', function (data) {
                         let body = JSON.parse(data);
-                        if (body.id === params.uID) {
-                            let token = accessToken.generatePsToken();
+                        if (uID === body.id) {
+                            let token = tokenMgr.generatePsToken();
                             res.send({ token, user: body.name });
                         }
                         else {
@@ -36,4 +37,21 @@ module.exports = router => {
                 }
             });
         });
+
+    router.route('/:uID/profile-pic')
+        .get((req, res) => {
+            let uID = req.params.uID;
+
+            let opts = {
+                hostname: 'graph.facebook.com',
+                path: '/v2.11/' + uID + '/picture?width=150&redirect=false'
+            };
+
+            https.get(opts, fbRes => {
+                fbRes.on('data', function (data) {
+                    let body = JSON.parse(data);
+                    res.send({ url: body.data.url });
+                });
+            });
+    });
 };
