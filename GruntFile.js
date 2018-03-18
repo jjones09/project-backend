@@ -48,7 +48,7 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('setFirebaseProjectID', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
+        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
 
         fireConf.serviceKey.project_id = grunt.option('pID');
 
@@ -57,7 +57,7 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('setFirebasePrivateKey', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
+        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
 
         fireConf.serviceKey.private_key = grunt.option('key');
         fireConf.serviceKey.private_key_id = grunt.option('keyID');
@@ -67,7 +67,7 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('setFirebaseClientInfo', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
+        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
 
         fireConf.serviceKey.client_email = grunt.option('email');
         fireConf.serviceKey.client_id = grunt.option('ID');
@@ -79,7 +79,7 @@ module.exports = (grunt) => {
     });
 
     grunt.registerTask('setFirebaseURL', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
+        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
 
         fireConf.dbURL = grunt.option('url');
 
