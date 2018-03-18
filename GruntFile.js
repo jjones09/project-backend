@@ -59,7 +59,9 @@ module.exports = (grunt) => {
     grunt.registerTask('setFirebasePrivateKey', () => {
         let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
 
-        fireConf.serviceKey.private_key = grunt.option('key');
+        fireConf.serviceKey.private_key = '-----BEGIN PRIVATE KEY-----\n' +
+            grunt.option('key') + '\n-----END PRIVATE KEY-----\n';
+
         fireConf.serviceKey.private_key_id = grunt.option('keyID');
 
         fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
