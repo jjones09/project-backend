@@ -51,7 +51,7 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Create dbConnection.json
+          name: Create mongodbConfig.json
           command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
           name: Build Docker image

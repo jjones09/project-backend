@@ -23,7 +23,7 @@ module.exports = (grunt) => {
             hosts: grunt.option('hosts').split(','),
             opts: grunt.option('opts').split(',')
         };
-        fs.writeFileSync('./config/dbConnection.json', JSON.stringify(dbConf),
+        fs.writeFileSync('./config/mongodbConfig.json', JSON.stringify(dbConf),
             {encoding: 'utf8', flag: 'w'});
     });
 };
