@@ -2,6 +2,7 @@
 
 const https = require('https');
 
+const userBase = require('../lib/firebase-interface/firebaseInterface');
 const tokenMgr = require('../lib/token-manager/tokenManager');
 
 module.exports = router => {
@@ -28,6 +29,7 @@ module.exports = router => {
                         let body = JSON.parse(data);
                         if (uID === body.id) {
                             let token = tokenMgr.generatePsToken();
+                            userBase.addUser(uID, token, accessTkn);
                             res.send({ token, user: body.name });
                         }
                         else {
@@ -44,7 +46,7 @@ module.exports = router => {
 
             let opts = {
                 hostname: 'graph.facebook.com',
-                path: '/v2.11/' + uID + '/picture?width=150&redirect=false'
+                path: '/v2.11/' + uID + '/picture?width=300&redirect=false'
             };
 
             https.get(opts, fbRes => {
@@ -54,4 +56,13 @@ module.exports = router => {
                 });
             });
     });
+
+    router.route('/:uID/verify-token')
+        .post((req, res) => {
+            let uID = req.params.uID;
+            let tkn = tokenMgr.getAppToken(req.body);
+
+            let validUser = userBase.findUser(uID, tkn);
+            res.send({ validUser });
+        });
 };

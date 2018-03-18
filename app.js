@@ -6,7 +6,8 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
-const db = require('./lib/database/database.js');
+const db = require('./lib/mongodb-interface/mongoDbInterface.js');
+const firebase = require('./lib/firebase-interface/firebaseInterface');
 
 const port = process.env.PORT || 3000;
 

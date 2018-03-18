@@ -51,8 +51,23 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Create dbConnection.json
+          name: Create mongodbConfig.json
           command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
+      - run:
+          name: Create firebaseConfig.json
+          command: grunt createFirebaseConfig
+      - run:
+          name: Set firebaseConfig.json Project ID
+          command: grunt setFirebaseProjectID --pid=$FIREBASE_PID
+      - run:
+          name: Set firebaseConfig.json private key
+          command: grunt setFirebasePrivateKey --key=$FIREBASE_PRIVATE_KEY --keyID=$FIREBASE_PRIVATE_KEY_ID
+      - run:
+          name: Set firebaseConfig.json client data
+          command: grunt setFirebaseClientInfo --email=$FIREBASE_CLIENT_EMAIL --ID=$FIREBASE_CLIENT_ID --certURL=$FIREBASE_CLIENT_CERT_URL
+      - run:
+          name: Set firebaseConfig.json database URL
+          command: grunt setFirebaseURL --url=$FIREBASE_DB_URL
       - run:
           name: Build Docker image
           command: docker build -t jjones09/project-backend:$CIRCLE_SHA1 .
