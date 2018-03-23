@@ -27,6 +27,7 @@
     "firebase-admin": "^5.9.1",
     "fs-extra": "^5.0.0",
     "jshint": "^2.9.5",
+    "moment": "^2.21.0",
     "mongodb": "^2.2.33",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
