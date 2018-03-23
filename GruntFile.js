@@ -3,18 +3,16 @@ const fs = require('fs');
 module.exports = (grunt) => {
 
     grunt.initConfig({
-        jshint: {
-            files: ['lib/**/*.js'],
-            options: {
-                esversion: 6,
-                node: true
+        eslint: {
+            lib: {
+                "src": ["lib/**/*.js"]
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('gruntify-eslint');
 
-    grunt.registerTask('lint', ['jshint']);
+    grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('createDbConfig', () => {
         let dbConf = {
