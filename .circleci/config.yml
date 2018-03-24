@@ -83,7 +83,9 @@ jobs:
             .circleci/setup-heroku.sh
       - run:
           name: Deploy to Heroku
-          command: git push heroku master
+          command: |
+            "[[ -e \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow
+            git push heroku master
 workflows:
   version: 2
   release_to_heroku:
