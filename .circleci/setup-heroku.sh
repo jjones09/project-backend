@@ -11,6 +11,6 @@ machine api.heroku.com
 EOF
 
 cat >> ~/.ssh/config << EOF
-VerifyHostKeyDNS yes
-StrictHostKeyChecking no
+  VerifyHostKeyDNS yes
+  StrictHostKeyChecking no
 EOF
