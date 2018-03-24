@@ -18,8 +18,8 @@ module.exports = (grunt) => {
         let dbConf = {
             user: grunt.option('user'),
             pass: grunt.option('pass'),
-            hosts: grunt.option('hosts').split(','),
-            opts: grunt.option('opts').split(',')
+            hosts: grunt.option('hosts'),
+            opts: grunt.option('opts')
         };
         fs.writeFileSync('./config/mongodbConfig.json', JSON.stringify(dbConf),
             {encoding: 'utf8', flag: 'w'});
