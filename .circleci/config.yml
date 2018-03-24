@@ -84,7 +84,6 @@ jobs:
       - run:
           name: Deploy to Heroku
           command: |
-            "[[ -e \"$(git rev-parse --git-dir)/shallow\" ]] || git fetch --unshallow"
             git push heroku master
 workflows:
   version: 2
