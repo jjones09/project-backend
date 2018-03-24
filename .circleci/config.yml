@@ -36,8 +36,8 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-        fingerprints:
-          - "b0:ec:cf:cc:99:48:ac:46:5f:a1:eb:61:0d:c3:c2:26"
+          fingerprints:
+            - "b0:ec:cf:cc:99:48:ac:46:5f:a1:eb:61:0d:c3:c2:26"
       - setup_remote_docker
       - restore_cache:
                 keys:
