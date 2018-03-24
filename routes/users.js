@@ -2,40 +2,57 @@
 
 const https = require('https');
 
-const userBase = require('../lib/firebase-interface/firebaseInterface');
+// const userBase = require('../lib/firebase-interface/firebaseInterface');
 const tokenMgr = require('../lib/token-manager/tokenManager');
 
-module.exports = router => {
+const userDB = require('../lib/user-db-manager/userDbManager');
 
-    router.route('/')
-        .get((req, res) => {
-            res.send('Hit the users route');
-        });
+
+module.exports = router => {
 
     router.route('/:uID/get-token')
         .post((req, res) => {
             let uID = req.params.uID;
 
-            let accessTkn = tokenMgr.getAccessToken(req.body);
+            userDB.findUser(uID).then(user => {
+                if (!user) {
 
-            let opts = {
-                hostname: 'graph.facebook.com',
-                path: '/v2.11/me?fields=id,name&access_token=' + accessTkn
-            };
+                    // TODO Refactor this out (common code) 1
 
-            https.get(opts, fbRes => {
-                if (fbRes.statusCode === 200) {
-                    fbRes.on('data', function (data) {
-                        let body = JSON.parse(data);
-                        if (uID === body.id) {
-                            let token = tokenMgr.generatePsToken();
-                            userBase.addUser(uID, token, accessTkn);
-                            res.send({ token, user: body.name });
+                    let fbTkn = tokenMgr.getAccessToken(req.body);
+                    tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
+                        if (fbRes.valid) {
+                            let appTkn = tokenMgr.generatePsToken();
+                            userDB.createUser(uID, fbTkn, fbRes.name, appTkn);
+                            res.send({ token: appTkn, user: fbRes.name });
                         }
                         else {
-                            res.send({ error: 'Invalid access token' });
+                            res.send({ error: 'Invalid credentials provided' });
                         }
                     });
+                }
+                else {
+                    let tokenExpired = tokenMgr.checkAppTokenExpiry(user.appTknIssued);
+                    if (tokenExpired) {
+
+                        // TODO Refactor this out (common code) 2
+
+                        let fbTkn = tokenMgr.getAccessToken(req.body);
+                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
+                            if (fbRes.valid) {
+                                let appTkn = tokenMgr.generatePsToken();
+
+                                userDB.updateAppToken(uID, fbTkn, appTkn);
+                                res.send({token: appTkn, user: fbRes.name});
+                            }
+                            else {
+                                res.send({error: 'Invalid credentials provided'});
+                            }
+                        });
+                    }
+                    else {
+                        res.send({ token: user.appAccessTkn, user: user.name})
+                    }
                 }
             });
         });
@@ -62,7 +79,27 @@ module.exports = router => {
             let uID = req.params.uID;
             let tkn = tokenMgr.getAppToken(req.body);
 
-            let validUser = userBase.findUser(uID, tkn);
+            let validUser = userDB.findUser(uID, tkn);
             res.send({ validUser });
+        });
+
+    router.route('/:uID/get-prefs')
+        .get((req, res) => {
+            let uID = req.params.uID;
+            userDB.findUser(uID).then(user => {
+                res.send(user ?
+                    {
+                        seeVideo: user.prefs.seeVideoGames,
+                        seeBoard: user.prefs.seeBoardGames,
+                        allHosts: user.prefs.allHosts} :
+                    {
+                        error: "User preferences not found"
+                    });
+            });
+        });
+
+    router.route('/:uID/set-prefs')
+        .post((req, res) => {
+            // TODO PUT STUFF IN HERE
         });
 };
