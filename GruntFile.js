@@ -15,6 +15,7 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('createDbConfig', () => {
+        fs.openSync('./config/mongodbConfig.json', 'w');
         let dbConf = {
             user: grunt.option('user'),
             pass: grunt.option('pass'),
