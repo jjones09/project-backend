@@ -59,8 +59,7 @@ jobs:
       - run:
           name: Log into Docker
           command: |
-            docker login --username=_ --password=$HEROKU_AUTH_TOKEN
-            registry.heroku.com
+            docker login --email=_ --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com
       - run:
           name: Push image to DockerHub
           command: |
