@@ -15,18 +15,19 @@ module.exports = (grunt) => {
     grunt.registerTask('lint', ['eslint']);
 
     grunt.registerTask('createDbConfig', () => {
-        fs.openSync('./config/mongodbConfig.json', 'w');
+        fs.openSync('./mongodbConfig.json', 'w');
         let dbConf = {
             user: grunt.option('user'),
             pass: grunt.option('pass'),
             hosts: grunt.option('hosts'),
             opts: grunt.option('opts').split(',').join('&')
         };
-        fs.writeFileSync('./config/mongodbConfig.json', JSON.stringify(dbConf),
+        fs.writeFileSync('./mongodbConfig.json', JSON.stringify(dbConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
     grunt.registerTask('createFirebaseConfig', () => {
+        fs.openSync('./firebaseConfig.json', 'w');
         let fireConf = {
             serviceKey: {
                 type: "service_account",
@@ -42,49 +43,48 @@ module.exports = (grunt) => {
             },
             dbURL: ""
         };
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
     grunt.registerTask('setFirebaseProjectID', () => {
-        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
+        let fireConf = JSON.parse(fs.readFileSync('./firebaseConfig.json'));
 
         fireConf.serviceKey.project_id = grunt.option('pID');
 
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
     grunt.registerTask('setFirebasePrivateKey', () => {
-        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
+        let fireConf = JSON.parse(fs.readFileSync('./firebaseConfig.json'));
 
         fireConf.serviceKey.private_key = '-----BEGIN PRIVATE KEY-----\n' +
             grunt.option('key') + '\n-----END PRIVATE KEY-----\n';
 
         fireConf.serviceKey.private_key_id = grunt.option('keyID');
 
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
     grunt.registerTask('setFirebaseClientInfo', () => {
-        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
+        let fireConf = JSON.parse(fs.readFileSync('./firebaseConfig.json'));
 
         fireConf.serviceKey.client_email = grunt.option('email');
         fireConf.serviceKey.client_id = grunt.option('ID');
         fireConf.serviceKey.client_x509_cert_url = grunt.option('certURL');
 
-
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
     grunt.registerTask('setFirebaseURL', () => {
-        let fireConf = JSON.parse(fs.readFileSync('./config/firebaseConfig.json'));
+        let fireConf = JSON.parse(fs.readFileSync('./firebaseConfig.json'));
 
         fireConf.dbURL = grunt.option('url');
 
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
 };
