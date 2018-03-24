@@ -27,6 +27,7 @@
     "firebase-admin": "^5.9.1",
     "fs-extra": "^5.0.0",
     "gruntify-eslint": "^4.0.0",
+    "http-auth": "^3.2.3",
     "jshint": "^2.9.5",
     "jshint-esnext": "^2.7.0-3",
     "moment": "^2.21.0",
