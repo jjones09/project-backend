@@ -100,6 +100,15 @@ module.exports = router => {
 
     router.route('/:uID/set-prefs')
         .post((req, res) => {
-            // TODO PUT STUFF IN HERE
+            if (req.body) {
+                let uID = req.params.uID;
+                let prefs = req.body.preferences;
+                let amendments = {
+                    seeVideoGames: prefs.seeVideo,
+                    seeBoardGames: prefs.seeBoard,
+                    allHosts: prefs.allHosts
+                };
+                userDB.updatePreferences(uID, amendments);
+            }
         });
 };
