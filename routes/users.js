@@ -2,11 +2,8 @@
 
 const https = require('https');
 
-// const userBase = require('../lib/firebase-interface/firebaseInterface');
 const tokenMgr = require('../lib/token-manager/tokenManager');
-
 const userDB = require('../lib/user-db-manager/userDbManager');
-
 
 module.exports = router => {
 
@@ -91,7 +88,9 @@ module.exports = router => {
                     {
                         seeVideo: user.prefs.seeVideoGames,
                         seeBoard: user.prefs.seeBoardGames,
-                        allHosts: user.prefs.allHosts} :
+                        allHosts: user.prefs.allHosts,
+                        radius: user.prefs.radius
+                    } :
                     {
                         error: "User preferences not found"
                     });
@@ -106,7 +105,8 @@ module.exports = router => {
                 let amendments = {
                     seeVideoGames: prefs.seeVideo,
                     seeBoardGames: prefs.seeBoard,
-                    allHosts: prefs.allHosts
+                    allHosts: prefs.allHosts,
+                    radius: prefs.radius
                 };
                 userDB.updatePreferences(uID, amendments);
             }
