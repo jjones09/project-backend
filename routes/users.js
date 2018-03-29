@@ -111,4 +111,28 @@ module.exports = router => {
                 userDB.updatePreferences(uID, amendments);
             }
         });
+
+    router.route('/:uID/get-profile')
+        .get((req, res) => {
+            let uID = req.params.uID;
+            userDB.getBasicProfile(uID).then(profile => {
+                res.send(profile);
+            });
+        });
+
+    router.route('/:uID/get-bio')
+        .get((req, res) => {
+           let uID = req.params.uID;
+           userDB.getUserBio(uID).then(bio => {
+               res.send(bio);
+           })
+        });
+
+    router.route('/:uID/set-bio')
+        .post((req, res) => {
+            if (req.body && req.body.bio) {
+                let uID = req.params.uID;
+                userDB.updateUserBio(uID, req.body.bio);
+            }
+        });
 };

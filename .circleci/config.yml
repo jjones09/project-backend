@@ -61,6 +61,10 @@ jobs:
           command: |
             docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com
       - run:
+          name: Set env to Production
+          command: |
+            heroku config:set NODE_ENV="production"
+      - run:
           name: Push image to DockerHub
           command: |
             docker build -t registry.heroku.com/playspark/web .
