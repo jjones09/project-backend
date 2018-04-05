@@ -35,12 +35,12 @@ module.exports = router => {
                         // TODO Refactor this out (common code) 2
 
                         let fbTkn = tokenMgr.getAccessToken(req.body);
-                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
-                            if (fbRes.valid) {
+                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(isValid => {
+                            if (isValid) {
                                 let appTkn = tokenMgr.generatePsToken();
 
                                 userDB.updateAppToken(uID, fbTkn, appTkn);
-                                res.send({token: appTkn, user: fbRes.name});
+                                res.send({token: appTkn, user: user.name});
                             }
                             else {
                                 res.send({error: 'Invalid credentials provided'});
@@ -64,7 +64,7 @@ module.exports = router => {
             };
 
             https.get(opts, fbRes => {
-                fbRes.on('data', function (data) {
+                fbRes.on('data', data => {
                     let body = JSON.parse(data);
                     res.send({ url: body.data.url });
                 });

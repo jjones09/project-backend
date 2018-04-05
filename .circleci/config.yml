@@ -57,13 +57,12 @@ jobs:
           name: Create mongodbConfig.json
           command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
+          name: Create giantBomb.json
+          command: grunt addGiantBombApiKey --key=$GIANT_BOMB_API_KEY
+      - run:
           name: Log into Docker
           command: |
             docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com
-      - run:
-          name: Set env to Production
-          command: |
-            heroku config:set NODE_ENV="production"
       - run:
           name: Push image to DockerHub
           command: |

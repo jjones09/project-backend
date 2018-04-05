@@ -87,4 +87,13 @@ module.exports = (grunt) => {
         fs.writeFileSync('./firebaseConfig.json', JSON.stringify(fireConf),
             {encoding: 'utf8', flag: 'w'});
     });
+
+    grunt.registerTask('addGiantBombApiKey', () => {
+        fs.openSync('./giantBomb.json', 'w');
+        let bombConf = {
+            key: grunt.option('key')
+        };
+        fs.writeFileSync('./giantBomb.json', JSON.stringify(bombConf),
+            {encoding: 'utf8', flag: 'w'});
+    });
 };
