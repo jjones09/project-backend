@@ -9,16 +9,22 @@ module.exports = router => {
 
     router.route('/:uID/get-token')
         .post((req, res) => {
+
+            // Get the User ID from the route params
             let uID = req.params.uID;
 
+            // Check if the user exists in the app DB
             userDB.findUser(uID).then(user => {
+
+                // If the user doesn't exist, first verify the supplied info with the FB API
+                // Then create a new user in the DB
                 if (!user) {
 
                     // TODO Refactor this out (common code) 1
 
                     let fbTkn = tokenMgr.getAccessToken(req.body);
                     tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
-                        if (fbRes.valid) {
+                        if (fbRes.isValid) {
                             let appTkn = tokenMgr.generatePsToken();
                             userDB.createUser(uID, fbTkn, fbRes.name, appTkn);
                             res.send({ token: appTkn, user: fbRes.name });
@@ -28,15 +34,19 @@ module.exports = router => {
                         }
                     });
                 }
+
+                // If the user does exist, first check the App-level token
+                // If this token is still recent (last 24 h) then go ahead
+                // If not, revalidate using FB API and issue new one if cleared
                 else {
                     let tokenExpired = tokenMgr.checkAppTokenExpiry(user.appTknIssued);
+
                     if (tokenExpired) {
-
-                        // TODO Refactor this out (common code) 2
-
                         let fbTkn = tokenMgr.getAccessToken(req.body);
-                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(isValid => {
-                            if (isValid) {
+
+                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
+
+                            if (fbRes.isValid) {
                                 let appTkn = tokenMgr.generatePsToken();
 
                                 userDB.updateAppToken(uID, fbTkn, appTkn);
@@ -76,8 +86,9 @@ module.exports = router => {
             let uID = req.params.uID;
             let tkn = tokenMgr.getAppToken(req.body);
 
-            let validUser = userDB.findUser(uID, tkn);
-            res.send({ validUser });
+            userDB.findUser(uID, tkn).then(user => {
+                res.send({ validUser: !!user });
+            });
         });
 
     router.route('/:uID/get-prefs')
@@ -110,6 +121,7 @@ module.exports = router => {
                 };
                 userDB.updatePreferences(uID, amendments);
             }
+            res.send(!!req.body);
         });
 
     router.route('/:uID/get-profile')
