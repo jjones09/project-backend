@@ -10,10 +10,11 @@ module.exports = (grunt) => {
         }
     });
 
+    // Set up the linter task
     grunt.loadNpmTasks('gruntify-eslint');
-
     grunt.registerTask('lint', ['eslint']);
 
+    // Creates the JSON required by the DB interface
     grunt.registerTask('createDbConfig', () => {
         fs.openSync('./mongodbConfig.json', 'w');
         let dbConf = {
@@ -26,6 +27,7 @@ module.exports = (grunt) => {
             {encoding: 'utf8', flag: 'w'});
     });
 
+    // Creates a JSON containing the Giant Bomb API Key
     grunt.registerTask('addGiantBombApiKey', () => {
         fs.openSync('./giantBomb.json', 'w');
         let bombConf = {
