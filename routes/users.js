@@ -147,4 +147,10 @@ module.exports = router => {
                 userDB.updateUserBio(uID, req.body.bio);
             }
         });
+
+    router.route('/:uID/get-hosting')
+        .get((req, res) => {
+           let uID = req.params.uID;
+
+        });
 };
