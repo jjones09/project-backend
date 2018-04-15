@@ -7,10 +7,18 @@ module.exports = router => {
     router.route('/:type/find')
         .get((req, res) => {
             let type = req.params.type;
+            let id = req.query.id;
             let title = req.query.title;
 
-            finder.findGames(type, title).then(games => {
-                res.send(games);
-            });
+            if (!id) {
+                finder.findGames(type, title).then(games => {
+                    res.send(games);
+                });
+            }
+            else {
+                finder.findByID(type, id).then(game => {
+                    res.send(game);
+                })
+            }
         });
 };
