@@ -30,11 +30,14 @@ module.exports = appIn => {
 
     // Middleware for all routes
     app.use(async (req, res, next) => {
-        logger.info(req.method + ' to ' + req.originalUrl + ' at ' + moment().format());
-        if (req.originalUrl.split('/')[3] === 'log-in' || req.headers['access-token']) {
-            console.log('Has access token!');
 
-            if (await validator.validate(req.headers['user'], req.headers['access-token'])) {
+        let isAdmin = req.originalUrl === '/admin/logs' || req.originalUrl === '/favicon.ico';
+
+        logger.info(req.method + ' to ' + req.originalUrl + ' at ' + moment().format());
+
+        if (req.originalUrl.split('/')[3] === 'log-in' || isAdmin || req.headers['access-token']) {
+
+            if (isAdmin || await validator.validate(req.headers['user'], req.headers['access-token'])) {
                 next();
             }
             else {

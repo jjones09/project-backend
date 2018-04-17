@@ -78,5 +78,13 @@ module.exports = router => {
             }
         });
 
+    router.route('/discover')
+        .get((req, res) => {
+            let lat = req.query.lat;
+            let long = req.query.long;
+
+
+        })
+
 
 };

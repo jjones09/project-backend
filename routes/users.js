@@ -13,7 +13,7 @@ module.exports = router => {
             // Get the User ID from the route params
             let uID = req.params.uID;
 
-            if (!req.query.appToken) {
+            if (!req.headers['access-token']) {
                 // Check if the user exists in the app DB
                 userDB.findUser(uID).then(user => {
 
@@ -71,6 +71,8 @@ module.exports = router => {
                 });
             }
             else {
+
+                // TODO FIX THIS!
                 let tkn = tokenMgr.getAppToken(req.body);
 
                 userDB.findUser(uID, tkn).then(user => {
