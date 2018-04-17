@@ -3,87 +3,37 @@ const fs = require('fs');
 module.exports = (grunt) => {
 
     grunt.initConfig({
-        jshint: {
-            files: ['lib/**/*.js'],
-            options: {
-                esversion: 6,
-                node: true
+        eslint: {
+            lib: {
+                "src": ["lib/**/*.js"]
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
+    // Set up the linter task
+    grunt.loadNpmTasks('gruntify-eslint');
+    grunt.registerTask('lint', ['eslint']);
 
-    grunt.registerTask('lint', ['jshint']);
-
+    // Creates the JSON required by the DB interface
     grunt.registerTask('createDbConfig', () => {
+        fs.openSync('./mongodbConfig.json', 'w');
         let dbConf = {
             user: grunt.option('user'),
             pass: grunt.option('pass'),
-            hosts: grunt.option('hosts').split(','),
-            opts: grunt.option('opts').split(',')
+            hosts: grunt.option('hosts'),
+            opts: grunt.option('opts').split(',').join('&')
         };
-        fs.writeFileSync('./config/mongodbConfig.json', JSON.stringify(dbConf),
+        fs.writeFileSync('./mongodbConfig.json', JSON.stringify(dbConf),
             {encoding: 'utf8', flag: 'w'});
     });
 
-    grunt.registerTask('createFirebaseConfig', () => {
-        let fireConf = {
-            serviceKey: {
-                type: "service_account",
-                project_id: "",
-                private_key_id: "",
-                private_key: "",
-                client_email: "",
-                client_id: "",
-                auth_uri: "https://accounts.google.com/o/oauth2/auth",
-                token_uri: "https://accounts.google.com/o/oauth2/token",
-                auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-                client_x509_cert_url: ""
-            },
-            dbURL: ""
+    // Creates a JSON containing the Giant Bomb API Key
+    grunt.registerTask('addGiantBombApiKey', () => {
+        fs.openSync('./giantBomb.json', 'w');
+        let bombConf = {
+            key: grunt.option('key')
         };
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
-            {encoding: 'utf8', flag: 'w'});
-    });
-
-    grunt.registerTask('setFirebaseProjectID', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
-
-        fireConf.serviceKey.project_id = grunt.option('pID');
-
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
-            {encoding: 'utf8', flag: 'w'});
-    });
-
-    grunt.registerTask('setFirebasePrivateKey', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
-
-        fireConf.serviceKey.private_key = grunt.option('key');
-        fireConf.serviceKey.private_key_id = grunt.option('keyID');
-
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
-            {encoding: 'utf8', flag: 'w'});
-    });
-
-    grunt.registerTask('setFirebaseClientInfo', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
-
-        fireConf.serviceKey.client_email = grunt.option('email');
-        fireConf.serviceKey.client_id = grunt.option('ID');
-        fireConf.serviceKey.client_x509_cert_url = grunt.option('certURL');
-
-
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
-            {encoding: 'utf8', flag: 'w'});
-    });
-
-    grunt.registerTask('setFirebaseURL', () => {
-        let fireConf = fs.readFileSync('./config/firebaseConfig.json');
-
-        fireConf.dbURL = grunt.option('url');
-
-        fs.writeFileSync('./config/firebaseConfig.json', JSON.stringify(fireConf),
+        fs.writeFileSync('./giantBomb.json', JSON.stringify(bombConf),
             {encoding: 'utf8', flag: 'w'});
     });
 };
