@@ -17,6 +17,8 @@ module.exports = router => {
             }
             else {
                 finder.findByID(type, id).then(game => {
+                    game.id = game._id;
+                    delete game._id;
                     res.send(game);
                 })
             }

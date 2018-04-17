@@ -3,7 +3,6 @@ const moment = require('moment');
 
 let events = require('../lib/event-manager/eventManager');
 let users = require('../lib/user-db-manager/userDbManager');
-let games = require('../lib/game-finder/dbGameSearch');
 let fbGraph = require('../lib/fb-graph/fbGraph');
 
 let validateParams = eventObj => {
