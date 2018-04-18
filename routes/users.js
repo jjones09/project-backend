@@ -65,8 +65,8 @@ module.exports = router => {
 
         });
 
-    router.route('/:uID/profile-pic')
-        .get((req, res) => {
+    router.route('/:uID/public-profile')
+        .get(async (req, res) => {
             let uID = req.params.uID;
 
             let opts = {
@@ -74,13 +74,19 @@ module.exports = router => {
                 path: '/v2.11/' + uID + '/picture?width=300&redirect=false'
             };
 
+            // Get user name
+            let user = await userDB.findUser(uID);
+
+            let resObj = {name: user.name};
+
             https.get(opts, fbRes => {
                 fbRes.on('data', data => {
                     let body = JSON.parse(data);
-                    res.send({ url: body.data.url });
+                    resObj.url = body.data.url;
+                    res.send(resObj);
                 });
             });
-    });
+        });
 
     router.route('/:uID/prefs')
         .get((req, res) => {
