@@ -106,9 +106,13 @@ module.exports = router => {
                     res.send({events: await events.discoverEvents()});
                 }
                 else {
-
+                    // TODO Handle user not found scenario
                 }
             })
+        });
 
-        })
+    router.route('/discover')
+        .get((req, res) => {
+
+        });
 };

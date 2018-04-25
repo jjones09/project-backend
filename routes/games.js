@@ -4,7 +4,7 @@ const finder = require('../lib/game-finder/gameFinder');
 
 module.exports = router => {
 
-    router.route('/:type/find')
+    router.route('/:type')
         .get((req, res) => {
             let type = req.params.type;
             let id = req.query.id;

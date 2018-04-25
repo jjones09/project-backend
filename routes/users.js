@@ -4,6 +4,7 @@ const https = require('https');
 
 const tokenMgr = require('../lib/token-manager/tokenManager');
 const userDB = require('../lib/user-db-manager/userDbManager');
+const events = require('../lib/event-manager/eventManager');
 
 module.exports = router => {
 
@@ -16,7 +17,7 @@ module.exports = router => {
             userDB.findUser(uID).then(user => {
 
                 if (!user) {
-                    tokenMgr.checkValidFacebookParams(uID, user.fbAccessTkn).then(fbRes => {
+                    tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
                         if (fbRes.isValid) {
                             let appTkn = tokenMgr.generatePsToken();
                             userDB.createUser(uID, fbTkn, fbRes.name, appTkn);
@@ -33,16 +34,20 @@ module.exports = router => {
 
                     let tkn = req.headers['access-token'];
 
-                    if (tkn === 'null' || tkn !== user.appAccessTkn) {
+                    if (tkn !== 'null' && tkn !== user.appAccessTkn) {
                         res.send({error: 'Invalid credentials provided'});
                     }
+                    else if (tkn === 'null') {
+                        tkn = user.appAccessTkn;
+                    }
 
-                    else if (tokenMgr.checkAppTokenExpiry(user.appTknIssued)) {
+                    if (tokenMgr.checkAppTokenExpiry(user.appTknIssued)) {
 
                         tokenMgr.checkValidFacebookParams(uID, user.fbAccessTkn).then(fbRes => {
                             if (fbRes.isValid) {
                                 let appTkn = tokenMgr.generatePsToken();
 
+                                console.log('SETTING APP TOKEN TO ' + appTkn);
                                 userDB.updateAppToken(uID, user.fbAccessTkn, appTkn);
 
                                 res.send({token: appTkn, user: user.name,});
@@ -57,12 +62,6 @@ module.exports = router => {
                     }
                 }
             });
-        });
-
-    router.route('/:uID/verify-token')
-        .post((req, res) => {
-            let uID = req.params.uID;
-
         });
 
     router.route('/:uID/public-profile')
@@ -119,14 +118,6 @@ module.exports = router => {
                 userDB.updatePreferences(uID, amendments);
             }
             res.send(!!req.body);
-        });
-
-    router.route('/:uID/get-profile')
-        .get((req, res) => {
-            let uID = req.params.uID;
-            userDB.getBasicProfile(uID).then(profile => {
-                res.send(profile);
-            });
         });
 
     router.route('/:uID/bio')
