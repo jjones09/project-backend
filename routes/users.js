@@ -4,94 +4,68 @@ const https = require('https');
 
 const tokenMgr = require('../lib/token-manager/tokenManager');
 const userDB = require('../lib/user-db-manager/userDbManager');
+const events = require('../lib/event-manager/eventManager');
 
 module.exports = router => {
 
     router.route('/:uID/log-in')
         .post((req, res) => {
 
-            // Get the User ID from the route params
             let uID = req.params.uID;
+            let fbTkn = tokenMgr.getAccessToken(req.body);
 
-            if (!req.headers['access-token']) {
-                // Check if the user exists in the app DB
-                userDB.findUser(uID).then(user => {
+            userDB.findUser(uID).then(user => {
 
-                    // If the user doesn't exist, first verify the supplied info with the FB API
-                    // Then create a new user in the DB
-                    if (!user) {
+                if (!user) {
+                    tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
+                        if (fbRes.isValid) {
+                            let appTkn = tokenMgr.generatePsToken();
+                            userDB.createUser(uID, fbTkn, fbRes.name, appTkn);
 
-                        let fbTkn = tokenMgr.getAccessToken(req.body);
-                        tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
+                            res.send({token: appTkn, user: fbRes.name});
+                        }
+                        else {
+                            res.send({error: 'Invalid credentials provided'});
+                        }
+                    });
+                }
+
+                else {
+
+                    let tkn = req.headers['access-token'];
+
+                    if (tkn !== 'null' && tkn !== user.appAccessTkn) {
+                        res.send({error: 'Invalid credentials provided'});
+                    }
+                    else if (tkn === 'null') {
+                        tkn = user.appAccessTkn;
+                    }
+
+                    if (tokenMgr.checkAppTokenExpiry(user.appTknIssued)) {
+
+                        tokenMgr.checkValidFacebookParams(uID, user.fbAccessTkn).then(fbRes => {
                             if (fbRes.isValid) {
                                 let appTkn = tokenMgr.generatePsToken();
-                                userDB.createUser(uID, fbTkn, fbRes.name, appTkn);
-                                res.send({token: appTkn, user: fbRes.name});
+
+                                console.log('SETTING APP TOKEN TO ' + appTkn);
+                                userDB.updateAppToken(uID, user.fbAccessTkn, appTkn);
+
+                                res.send({token: appTkn, user: user.name,});
                             }
                             else {
                                 res.send({error: 'Invalid credentials provided'});
                             }
                         });
                     }
-
-                    // If the user does exist, first check the App-level token
-                    // If this token is still recent (last 24 h) then go ahead
-                    // If not, revalidate using FB API and issue new one if cleared
                     else {
-                        let tokenExpired = tokenMgr.checkAppTokenExpiry(user.appTknIssued);
-
-                        if (tokenExpired) {
-                            let fbTkn = tokenMgr.getAccessToken(req.body);
-
-                            tokenMgr.checkValidFacebookParams(uID, fbTkn).then(fbRes => {
-
-                                if (fbRes.isValid) {
-                                    let appTkn = tokenMgr.generatePsToken();
-
-                                    userDB.updateAppToken(uID, fbTkn, appTkn);
-                                    res.send({
-                                        token: appTkn,
-                                        user: user.name,
-                                    });
-                                }
-                                else {
-                                    res.send({
-                                        error: 'Invalid credentials provided'
-                                    });
-                                }
-                            });
-                        }
-                        else {
-                            res.send({
-                                token: user.appAccessTkn,
-                                user: user.name
-                            });
-                        }
+                        res.send({token: tkn, user: user.name,});
                     }
-                });
-            }
-            else {
-
-                // TODO FIX THIS!
-                let tkn = tokenMgr.getAppToken(req.body);
-
-                userDB.findUser(uID, tkn).then(user => {
-                    let response = user ? {
-
-                        } :{};
-                    res.send({ validUser: !!user });
-                });
-            }
+                }
+            });
         });
 
-    router.route('/:uID/verify-token')
-        .post((req, res) => {
-            let uID = req.params.uID;
-
-        });
-
-    router.route('/:uID/profile-pic')
-        .get((req, res) => {
+    router.route('/:uID/public-profile')
+        .get(async (req, res) => {
             let uID = req.params.uID;
 
             let opts = {
@@ -99,13 +73,19 @@ module.exports = router => {
                 path: '/v2.11/' + uID + '/picture?width=300&redirect=false'
             };
 
+            // Get user name
+            let user = await userDB.findUser(uID);
+
+            let resObj = {name: user.name};
+
             https.get(opts, fbRes => {
                 fbRes.on('data', data => {
                     let body = JSON.parse(data);
-                    res.send({ url: body.data.url });
+                    resObj.url = body.data.url;
+                    res.send(resObj);
                 });
             });
-    });
+        });
 
     router.route('/:uID/prefs')
         .get((req, res) => {
@@ -140,14 +120,6 @@ module.exports = router => {
             res.send(!!req.body);
         });
 
-    router.route('/:uID/get-profile')
-        .get((req, res) => {
-            let uID = req.params.uID;
-            userDB.getBasicProfile(uID).then(profile => {
-                res.send(profile);
-            });
-        });
-
     router.route('/:uID/bio')
         .get((req, res) => {
            let uID = req.params.uID;
@@ -160,7 +132,9 @@ module.exports = router => {
         .post((req, res) => {
             if (req.body && req.body.bio) {
                 let uID = req.params.uID;
-                userDB.updateUserBio(uID, req.body.bio);
+                userDB.updateUserBio(uID, req.body.bio).then(done => {
+                    res.send({updated: (done.result && done.result.ok)});
+                })
             }
         });
 };

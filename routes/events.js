@@ -2,6 +2,8 @@
 const moment = require('moment');
 
 let events = require('../lib/event-manager/eventManager');
+let users = require('../lib/user-db-manager/userDbManager');
+let fbGraph = require('../lib/fb-graph/fbGraph');
 
 let validateParams = eventObj => {
 
@@ -38,7 +40,7 @@ module.exports = router => {
         .get((req, res) => {
             let host = req.query.host;
 
-            events.findEvents(host).then(results => {
+            events.findEventsHostedBy(host).then(results => {
                 results.map(event => {
                     event.id = event._id;
                     delete event._id;
@@ -83,8 +85,34 @@ module.exports = router => {
             let lat = req.query.lat;
             let long = req.query.long;
 
+            users.findUser(req.headers['user']).then(async user => {
+                if (user) {
+                    let opts = user.prefs;
+                    let queryParams = {
+                        user: user._id,
+                        location: { lat, long }
+                    };
 
-        })
+                    // If the user wants friends only, get their list of friends
+                    if (!opts.allHosts) {
+                        queryParams.friends = await fbGraph.getFriends(user._id, user.fbAccessTkn);
+                    }
 
+                    // If the user is only interested in one game type, set it
+                    if (opts.seeBoardGames ? !opts.seeVideoGames : opts.seeVideoGames) {
+                        queryParams.gameType = opts.seeBoardGames ? 'board' : 'video';
+                    }
 
+                    res.send({events: await events.discoverEvents()});
+                }
+                else {
+                    // TODO Handle user not found scenario
+                }
+            })
+        });
+
+    router.route('/discover')
+        .get((req, res) => {
+
+        });
 };

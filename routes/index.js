@@ -35,15 +35,13 @@ module.exports = appIn => {
 
         logger.info(req.method + ' to ' + req.originalUrl + ' at ' + moment().format());
 
-        if (req.originalUrl.split('/')[3] === 'log-in' || isAdmin || req.headers['access-token']) {
+        if (req.originalUrl.split('/')[3] === 'log-in' ||
+            isAdmin ||
+            await validator.validate(req.headers['user'], req.headers['access-token'])) {
 
-            if (isAdmin || await validator.validate(req.headers['user'], req.headers['access-token'])) {
-                next();
-            }
-            else {
-                sendBadResponse(req, res);
-            }
+            next();
         }
+
         else {
             sendBadResponse(req, res);
         }
