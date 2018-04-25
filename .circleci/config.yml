@@ -1,3 +1,4 @@
+version: 2
 jobs:
   build:
     working_directory: ~/tmp
@@ -73,6 +74,7 @@ jobs:
             docker build -t registry.heroku.com/playspark/web .
             docker push registry.heroku.com/playspark/web
 workflows:
+  version: 2
   release_to_heroku:
     jobs:
       - build
