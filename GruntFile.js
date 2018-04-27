@@ -36,4 +36,9 @@ module.exports = (grunt) => {
         fs.writeFileSync('./giantBomb.json', JSON.stringify(bombConf),
             {encoding: 'utf8', flag: 'w'});
     });
+
+    // Creates a JSON containing the Giant Bomb API Key
+    grunt.registerTask('createLogFile', () => {
+        fs.openSync('./app.log', 'w');
+    });
 };
