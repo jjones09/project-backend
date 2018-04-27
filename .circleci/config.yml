@@ -65,6 +65,9 @@ jobs:
           name: Create giantBomb.json
           command: grunt addGiantBombApiKey --key=$GIANT_BOMB_API_KEY
       - run:
+          name: Create app.log file
+          command: grunt createLogFile
+      - run:
           name: Log into Docker
           command: |
             docker login --username=_ --password=$HEROKU_AUTH_TOKEN registry.heroku.com

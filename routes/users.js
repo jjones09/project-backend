@@ -34,31 +34,35 @@ module.exports = router => {
 
                     let tkn = req.headers['access-token'];
 
-                    if (tkn !== 'null' && tkn !== user.appAccessTkn) {
+                    let isActive = tokenMgr.checkAppTokenExpiry(user.appTknIssued);
+
+                    if (tkn !== 'null' && tkn !== user.appAccessTkn && isActive) {
                         res.send({error: 'Invalid credentials provided'});
                     }
-                    else if (tkn === 'null') {
-                        tkn = user.appAccessTkn;
-                    }
-
-                    if (tokenMgr.checkAppTokenExpiry(user.appTknIssued)) {
-
-                        tokenMgr.checkValidFacebookParams(uID, user.fbAccessTkn).then(fbRes => {
-                            if (fbRes.isValid) {
-                                let appTkn = tokenMgr.generatePsToken();
-
-                                console.log('SETTING APP TOKEN TO ' + appTkn);
-                                userDB.updateAppToken(uID, user.fbAccessTkn, appTkn);
-
-                                res.send({token: appTkn, user: user.name,});
-                            }
-                            else {
-                                res.send({error: 'Invalid credentials provided'});
-                            }
-                        });
-                    }
                     else {
-                        res.send({token: tkn, user: user.name,});
+                        if (tkn === 'null') {
+                            tkn = user.appAccessTkn;
+                        }
+
+                        if (!isActive) {
+
+                            tokenMgr.checkValidFacebookParams(uID, user.fbAccessTkn).then(fbRes => {
+                                if (fbRes.isValid) {
+                                    let appTkn = tokenMgr.generatePsToken();
+
+                                    console.log('SETTING APP TOKEN TO ' + appTkn);
+                                    userDB.updateAppToken(uID, user.fbAccessTkn, appTkn);
+
+                                    res.send({token: appTkn, user: user.name,});
+                                }
+                                else {
+                                    res.send({error: 'Invalid credentials provided'});
+                                }
+                            });
+                        }
+                        else {
+                            res.send({token: tkn, user: user.name,});
+                        }
                     }
                 }
             });
