@@ -93,4 +93,16 @@ describe('gameFinder Tests', function () {
             formatted.length.should.be.equal(0);
         });
     });
+
+    describe('getFinder()', function () {
+
+        it ('should return empty if input is empty', function () {
+
+            let games = [];
+
+            let formatted = finder.formatResults(games);
+
+            formatted.length.should.be.equal(0);
+        });
+    });
 });
