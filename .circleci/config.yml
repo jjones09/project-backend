@@ -27,10 +27,10 @@ jobs:
           name: Run linter
           command: grunt lint
       - run:
-          name: Create mongodbConfig.json - Needed for testing
+          name: Create mongodbConfig.json
           command: grunt createDbConfig --user=$MONGO_USER --pass=$MONGO_PASSWORD --hosts=$MONGO_HOSTS --opts=$MONGO_OPTIONS
       - run:
-          name: Create giantBomb.json - Needed for testing
+          name: Create giantBomb.json
           command: grunt addGiantBombApiKey --key=$GIANT_BOMB_API_KEY
       - run:
           name: Run unit tests
