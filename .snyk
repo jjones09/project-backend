@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.10.2
+version: v1.13.5
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -8,3 +8,13 @@ patch:
         patched: '2018-04-17T11:52:00.801Z'
     - jshint-esnext > cli > glob > minimatch:
         patched: '2018-04-17T11:52:00.801Z'
+  'npm:extend:20180424':
+    - jshint > phantomjs-prebuilt > request > extend:
+        patched: '2019-08-09T09:16:52.566Z'
+    - jshint > phantom > phantomjs-prebuilt > request > extend:
+        patched: '2019-08-09T09:16:52.566Z'
+  'npm:stringstream:20180511':
+    - jshint > phantomjs-prebuilt > request > stringstream:
+        patched: '2019-08-09T09:16:52.566Z'
+    - jshint > phantom > phantomjs-prebuilt > request > stringstream:
+        patched: '2019-08-09T09:16:52.566Z'
