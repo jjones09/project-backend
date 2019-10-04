@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.10.2
+version: v1.13.5
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -8,3 +8,16 @@ patch:
         patched: '2018-04-17T11:52:00.801Z'
     - jshint-esnext > cli > glob > minimatch:
         patched: '2018-04-17T11:52:00.801Z'
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
+    - firebase-admin > @google-cloud/storage > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > gaxios > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
+    - firebase-admin > @google-cloud/firestore > google-gax > google-auto-auth > google-auth-library > gtoken > gaxios > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
+    - firebase-admin > @google-cloud/storage > gcs-resumable-upload > google-auto-auth > google-auth-library > gtoken > gaxios > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
+    - firebase-admin > @google-cloud/firestore > @google-cloud/common-grpc > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > gaxios > https-proxy-agent:
+        patched: '2019-10-03T23:55:20.218Z'
