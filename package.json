@@ -44,7 +44,7 @@
     "require-dir": "^0.3.2",
     "rewire": "^4.0.0",
     "winston": "^2.4.1",
-    "snyk": "^1.290.1"
+    "snyk": "^1.1064.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",
