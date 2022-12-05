@@ -22,10 +22,10 @@
   "dependencies": {
     "async": "^2.6.0",
     "boardgamegeek": "^0.5.5",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.19.2",
     "change-case": "^3.0.1",
     "cookie-session": "^2.0.0-beta.3",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "firebase": "^4.10.1",
     "firebase-admin": "^8.3.0",
     "fs-extra": "^5.0.0",
